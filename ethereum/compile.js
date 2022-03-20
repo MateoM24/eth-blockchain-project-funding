@@ -37,6 +37,6 @@ for (let contractName in contracts) {
   console.log(path.resolve(buildPath, contractName + ".json"));
   fs.outputJsonSync(
     path.resolve(buildPath, contractName + ".json"),
-    contracts[contractName].abi
+    contracts[contractName]
   );
 }
