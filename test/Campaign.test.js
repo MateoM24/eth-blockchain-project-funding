@@ -65,4 +65,15 @@ describe("Campaigns", () => {
       assert(err);
     }
   });
+
+  it("allows a manager to make a payment request", async () => {
+    const description = "Marketing campain";
+    await campaign.methods.createRequest(description, "100", accounts[1]).send({
+      from: accounts[0],
+      gas: "1000000",
+    });
+
+    const request = await campaign.methods.requests(0).call();
+    assert.equal(request.description, description);
+  });
 });
