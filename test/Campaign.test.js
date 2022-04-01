@@ -51,4 +51,18 @@ describe("Campaigns", () => {
     const isContributor = await campaign.methods.approvers(accounts[1]).call();
     assert(isContributor);
   });
+
+  it("requires a minimum contribution", async () => {
+    try {
+      await campaign.methods.contribute().send({
+        value: "5",
+        from: accounts[1],
+      });
+      //code execution should never reach below assert(false) statement
+      //as we expect error being thrown earlier
+      assert(false);
+    } catch (err) {
+      assert(err);
+    }
+  });
 });
