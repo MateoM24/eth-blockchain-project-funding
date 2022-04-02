@@ -31,9 +31,7 @@ const output = solc.compile(
 
 fs.ensureDirSync(buildPath);
 const contracts = JSON.parse(output).contracts["Campaign.sol"];
-// console.log(JSON.parse(output));
 for (let contractName in contracts) {
-  //   console.log(contracts[contractName].abi);
   console.log(path.resolve(buildPath, contractName + ".json"));
   fs.outputJsonSync(
     path.resolve(buildPath, contractName + ".json"),
