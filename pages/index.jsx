@@ -8,7 +8,6 @@ const CampaignIndex = ({ campaigns }) => {
     <Layout>
       <div>
         <h3>Open Campaigns</h3>
-        <h1>This is the new campaign page!!!</h1>
         <Link href="/campaigns/new">
           <a>
             <Button
