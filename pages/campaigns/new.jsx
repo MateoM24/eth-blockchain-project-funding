@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useRouter } from "next/router";
 import { Form, Button, Input, Message } from "semantic-ui-react";
 import Layout from "../../components/Layout";
 import factory from "../../ethereum/factory";
@@ -8,6 +9,8 @@ export default () => {
   const [minContribution, setMinContribution] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const router = useRouter();
 
   const onSubmit = async (event) => {
     event.preventDefault();
@@ -20,6 +23,7 @@ export default () => {
         // gas doesn't need to be specified here as metamask has a funcionality to calculate expected gas amount on its own.
         from: accounts[0],
       });
+      router.push("/");
     } catch (err) {
       setErrorMessage(err.message);
     } finally {
