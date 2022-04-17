@@ -1,14 +1,11 @@
-import { useRouter } from "next/router";
-import { Card } from "semantic-ui-react";
+import { Card, Grid } from "semantic-ui-react";
 import web3 from "../../ethereum/web3";
 
 import Layout from "../../components/Layout";
 import Campaign from "../../ethereum/campaign";
+import ContributeForm from "../../components/ContributeForm";
 
 export default (props) => {
-  const router = useRouter();
-  const { address } = router.query;
-
   const renderCards = ({
     minimumContribution,
     balance,
@@ -58,19 +55,20 @@ export default (props) => {
   };
   return (
     <Layout>
-      <h1>Contract address: {address}</h1>
-      {renderCards(props)}
+      <h3>Campaign Show</h3>
+      <Grid>
+        <Grid.Column width={10}>{renderCards(props)}</Grid.Column>
+        <Grid.Column width={6}>
+          <ContributeForm campaignAddress={props.address} />
+        </Grid.Column>
+      </Grid>
     </Layout>
   );
 };
 
 export async function getServerSideProps(props) {
-  console.log(props.query.address);
-  // const campaigns = await factory.methods.getDeployedCampaigns().call();
-  // return { props: { campaigns } };
   const campaign = Campaign(props.query.address);
   const summary = await campaign.methods.getSummary().call();
-  console.log(summary);
   return {
     props: {
       minimumContribution: summary[0],
@@ -78,6 +76,7 @@ export async function getServerSideProps(props) {
       requestCount: summary[2],
       approversCount: summary[3],
       manager: summary[4],
+      address: props.query.address,
     },
   };
 }
