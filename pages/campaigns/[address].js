@@ -66,8 +66,8 @@ export default (props) => {
   );
 };
 
-export async function getServerSideProps(props) {
-  const campaign = Campaign(props.query.address);
+export async function getServerSideProps(context) {
+  const campaign = Campaign(context.query.address);
   const summary = await campaign.methods.getSummary().call();
   return {
     props: {
@@ -76,7 +76,7 @@ export async function getServerSideProps(props) {
       requestCount: summary[2],
       approversCount: summary[3],
       manager: summary[4],
-      address: props.query.address,
+      address: context.query.address,
     },
   };
 }
