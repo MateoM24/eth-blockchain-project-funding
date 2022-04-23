@@ -2,9 +2,12 @@ import { Button, Form, Input, Message } from "semantic-ui-react";
 import { useState } from "react";
 import Campaign from "../ethereum/campaign";
 import web3 from "../ethereum/web3";
+import { useRouter } from "next/router";
 
 const ContributeForm = ({ campaignAddress }) => {
   const [contribution, setContribution] = useState("");
+
+  const router = useRouter();
 
   const onSubmit = async (event) => {
     event.preventDefault();
@@ -16,6 +19,8 @@ const ContributeForm = ({ campaignAddress }) => {
         from: accounts[0],
         value: web3.utils.toWei(contribution, "ether"),
       });
+      console.log("done");
+      router.replace(`/campaigns/${campaignAddress}`);
     } catch (err) {}
   };
   return (
