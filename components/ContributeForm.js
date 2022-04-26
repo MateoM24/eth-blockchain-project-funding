@@ -6,6 +6,8 @@ import { useRouter } from "next/router";
 
 const ContributeForm = ({ campaignAddress }) => {
   const [contribution, setContribution] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const router = useRouter();
 
@@ -13,6 +15,8 @@ const ContributeForm = ({ campaignAddress }) => {
     event.preventDefault();
     console.log(campaignAddress);
     const campaign = Campaign(campaignAddress);
+    setLoading(true);
+    setErrorMessage("");
     try {
       const accounts = await web3.eth.getAccounts();
       await campaign.methods.contribute().send({
@@ -21,10 +25,15 @@ const ContributeForm = ({ campaignAddress }) => {
       });
       console.log("done");
       router.replace(`/campaigns/${campaignAddress}`);
-    } catch (err) {}
+    } catch (err) {
+      setErrorMessage(err.message);
+    } finally {
+      setLoading(false);
+      setContribution("");
+    }
   };
   return (
-    <Form onSubmit={onSubmit}>
+    <Form onSubmit={onSubmit} error={!!errorMessage}>
       <Form.Field>
         <label>Amount to Contribute</label>
         <Input
@@ -34,7 +43,10 @@ const ContributeForm = ({ campaignAddress }) => {
           onChange={(event) => setContribution(event.target.value)}
         />
       </Form.Field>
-      <Button primary>Contribute!</Button>
+      <Message error header="Oops!" content={errorMessage} />
+      <Button primary loading={loading}>
+        Contribute!
+      </Button>
     </Form>
   );
 };
