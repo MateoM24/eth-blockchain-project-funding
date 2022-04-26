@@ -1,9 +1,10 @@
-import { Card, Grid } from "semantic-ui-react";
-import web3 from "../../ethereum/web3";
+import Link from "next/link";
+import { Card, Grid, Button } from "semantic-ui-react";
+import web3 from "../../../ethereum/web3";
 
-import Layout from "../../components/Layout";
-import Campaign from "../../ethereum/campaign";
-import ContributeForm from "../../components/ContributeForm";
+import Layout from "../../../components/Layout";
+import Campaign from "../../../ethereum/campaign";
+import ContributeForm from "../../../components/ContributeForm";
 
 export default (props) => {
   const renderCards = ({
@@ -57,14 +58,29 @@ export default (props) => {
     <Layout>
       <h3>Campaign Show</h3>
       <Grid>
-        <Grid.Column width={10}>{renderCards(props)}</Grid.Column>
-        <Grid.Column width={6}>
-          <ContributeForm campaignAddress={props.address} />
-        </Grid.Column>
+        <Grid.Row>
+          <Grid.Column width={10}>{renderCards(props)}</Grid.Column>
+          <Grid.Column width={6}>
+            <ContributeForm campaignAddress={props.address} />
+          </Grid.Column>
+        </Grid.Row>
+        <Grid.Row>
+          <Grid.Column>{renderLink(props)}</Grid.Column>
+        </Grid.Row>
       </Grid>
     </Layout>
   );
 };
+
+function renderLink(props) {
+  return (
+    <Link href={`/campaigns/${props.address}/requests`}>
+      <a>
+        <Button primary>View Requests</Button>
+      </a>
+    </Link>
+  );
+}
 
 export async function getServerSideProps(context) {
   const campaign = Campaign(context.query.address);
