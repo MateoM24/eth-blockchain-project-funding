@@ -7,10 +7,18 @@ export default ({ request, id, address, approversCount }) => {
 
   const onApprove = async () => {
     const campaign = new Campaign(address);
-
     const accounts = await web3.eth.getAccounts();
 
     await campaign.methods.approveRequest(id).send({
+      from: accounts[0],
+    });
+  };
+
+  const onFinalize = async () => {
+    const campaign = new Campaign(address);
+    const accounts = await web3.eth.getAccounts();
+
+    await campaign.methods.finalizeRequest(id).send({
       from: accounts[0],
     });
   };
@@ -27,7 +35,11 @@ export default ({ request, id, address, approversCount }) => {
           Approve
         </Button>
       </Cell>
-      <Cell>Finalize</Cell>
+      <Cell>
+        <Button color="teal" basic onClick={onFinalize}>
+          Finalize
+        </Button>
+      </Cell>
     </Row>
   );
 };
