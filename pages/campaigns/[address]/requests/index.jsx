@@ -2,10 +2,25 @@ import Layout from "../../../../components/Layout";
 import { Button, Table } from "semantic-ui-react";
 import Link from "next/link";
 import Campaign from "../../../../ethereum/campaign";
-import Header from "../../../../components/Header";
+import RequestRow from "../../../../components/RequestRow";
 
 export default (props) => {
   const { Header, Row, HeaderCell, Body } = Table;
+
+  const renderRows = () => {
+    return props.requests.map((request, index) => {
+      return (
+        <RequestRow
+          key={index}
+          request={request}
+          id={index}
+          address={props.address}
+          approversCount={props.approversCount}
+        ></RequestRow>
+      );
+    });
+  };
+
   return (
     <Layout>
       <h3>Request List</h3>
@@ -19,12 +34,14 @@ export default (props) => {
           <Row>
             <HeaderCell>ID</HeaderCell>
             <HeaderCell>Description</HeaderCell>
+            <HeaderCell>Amount</HeaderCell>
+            <HeaderCell>Recipient</HeaderCell>
             <HeaderCell>Approval Count</HeaderCell>
-            <HeaderCell>Approval</HeaderCell>
             <HeaderCell>Approve</HeaderCell>
             <HeaderCell>Finalize</HeaderCell>
           </Row>
         </Header>
+        <Body>{renderRows()}</Body>
       </Table>
     </Layout>
   );
@@ -33,6 +50,7 @@ export default (props) => {
 export async function getServerSideProps(context) {
   const campaign = Campaign(context.query.address);
   const requestCount = await campaign.methods.getRequestsCount().call();
+  const approversCount = await campaign.methods.approversCount().call();
 
   let requests = await Promise.all(
     Array(parseInt(requestCount))
@@ -57,6 +75,7 @@ export async function getServerSideProps(context) {
       address: context.query.address,
       requests: mappedRequests,
       requestCount: requestCount,
+      approversCount: approversCount,
     },
   };
 }
