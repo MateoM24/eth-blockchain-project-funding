@@ -26,7 +26,9 @@ export default (props) => {
       <h3>Request List</h3>
       <Link href={`/campaigns/${props.address}/requests/new`}>
         <a>
-          <Button primary>Add Requests</Button>
+          <Button primary floated="right" style={{ marginBottom: 10 }}>
+            Add Requests
+          </Button>
         </a>
       </Link>
       <Table>
@@ -43,6 +45,7 @@ export default (props) => {
         </Header>
         <Body>{renderRows()}</Body>
       </Table>
+      <div>{`Found ${props.requestCount} requests`}</div>
     </Layout>
   );
 };
